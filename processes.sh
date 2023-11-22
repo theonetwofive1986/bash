@@ -1,5 +1,6 @@
 #!/bin/bash
-#This will run the TOP command to get the running processes and save it to current directory as top.txt then display the output.
+#This will run the TOP command to get the running processes 
+#and save it to current directory as top.txt then display the output.
 set -e
 top=top.txt
 
