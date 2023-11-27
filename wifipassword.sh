@@ -1,5 +1,5 @@
 #!/bin/bash
-#This is get the ssid and password of your saved Network in your laptop/computer.
+#This is to get the ssid and password of your saved Network in your laptop/computer.
 
 #"e" To stop the script when an error occured.
 #"x" To display the command during execution.
@@ -10,7 +10,7 @@ set -evx
 #To enable this command remove the "#"
 #rm -f ./ssid.txt
 
-#To get the ssid and password on each network files in /etc/NetworkManager/system-connecitons/
+#To get the ssid and password from each network files in /etc/NetworkManager/system-connecitons/
 for file in /etc/NetworkManager/system-connections/*
 do
   cat $file | grep "ssid=" >> ssid.txt;
