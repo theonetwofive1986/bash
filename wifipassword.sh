@@ -17,5 +17,7 @@ do
   cat $file | grep "password" >> ssid.txt;
 done
 
+cat "./ssid.txt"
+
 #NOTE: after updating my ubuntu to version 23.10 the files inside /etc/NetworkManager/system-connecions/ are no longer exist.
 #Maybe it was part of the update.
