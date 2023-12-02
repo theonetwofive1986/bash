@@ -2,7 +2,7 @@
 #This is to display the processes and sorted by memory usage from high to low.
 
 #To display the executed command and stop when encountered an error.
-set -ex
+set -e
 
 #To create a variable to store the result of top command.
 top=./top.txt
