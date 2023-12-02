@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #This is to read input and display
 #Stdout will get the stdin
 
