@@ -2,9 +2,7 @@
 #This is to get the ssid and password of your saved Network in your laptop/computer.
 
 #"e" To stop the script when an error occured.
-#"x" To display the command during execution.
-#"v" To display the input command.
-set -evx
+set -e
 
 #To remove the ssid.txt from your current directory if existing.
 #To enable this command remove the "#"
