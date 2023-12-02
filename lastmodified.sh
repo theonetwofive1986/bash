@@ -16,5 +16,5 @@ if [-f ~/lastmodified.txt]
 then
 cat $lastmodified
 else
-echo "Check the script."
+echo "Check the script"
 fi
