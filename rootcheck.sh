@@ -4,14 +4,14 @@ set -ex
 
 rm -f rootcheck.txt
 
-journalctl -S yesterday -o short-full -g root > /home/adminuser/rootcheck.txt
+journalctl -S yesterday -o short-full -g root > ./rootcheck.txt
 
 if [ -f ~./rootcheck.txt ]
 then
-echo "/home/adminuser/rootcheck.txt"
+echo "./rootcheck.txt"
 else
-	journalctl -S yesterday -o short-full -g root > /home/adminuser/rootcheck.txt
+	journalctl -S yesterday -o short-full -g root > ./rootcheck.txt
 fi
 
 
-cat "/home/adminuser/rootcheck.txt"
+cat "./rootcheck.txt"
