@@ -8,7 +8,7 @@ set -e
 #To enable this command remove the "#"
 #rm -f ./ssid.txt
 
-#To get the ssid and password from each network files in /etc/NetworkManager/system-connecitons/
+#To get the ssid and password from each network files in /etc/netplan/
 for file in /etc/netplan/*
 do
   cat $file | grep "name" >> ssid.txt;
@@ -17,5 +17,5 @@ done
 
 cat "./ssid.txt"
 
-#NOTE: after updating my ubuntu to version 23.10 the files inside /etc/NetworkManager/system-connecions/ are no longer exist.
+#NOTE: after updating my ubuntu to version 23.10 the files inside /etc/NetworkManager/system-connections/ are no longer exist.
 #Maybe it was part of the update.
