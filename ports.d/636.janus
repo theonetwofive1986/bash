@@ -1,0 +1,59 @@
+#!/usr/bin/bash
+
+set -e
+
+remove(){
+	rm ./o*.tmp
+}
+
+PS3="
+*************************************************
+*		Port 636 is ldapssl			*
+*						*
+*		What do you want to do?		*
+*************************************************
+"
+
+n(){
+	nmap -p636 localhost > ./o636.tmp && chmod 666 ./o*.tmp && awk '$3 == "ldapssl" { print $2 }' ./o636.tmp > ./o636a.tmp && chmod 666 ./o*.tmp
+}
+
+n
+
+j=$(cat "./o636a.tmp")
+
+select janus in "Status" "Close" "Exit"; do
+	case $janus in
+		"Status")
+			echo "
+*	Port 636 is $j.		*"
+			remove
+			n
+			;;
+		"Close")
+			if [ "$j" == "closed" ]
+			then
+				echo "
+*	Port 636 is $j.		*
+"
+				remove
+				exit
+			else
+				echo "
+*	Closing port 636(ldapssl).	*
+"
+				fuser -k -n tcp 636
+			fi
+			remove
+			exit
+			;;
+		"Exit")
+			echo "
+*	bye!		*
+"
+			remove
+			exit
+			;;
+	esac
+done
+

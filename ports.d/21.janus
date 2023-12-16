@@ -1,0 +1,66 @@
+#!/usr/bin/bash
+
+set -e
+
+PS3="
+**************************************************
+*     Port 21 is for ftp(control command).	 *
+*            What do you want to do?             *
+**************************************************
+"
+
+nmap -p21 localhost > ./o21.tmp && chmod 666 ./o*.tmp && awk '/ftp/ { print $2 }' ./o21.tmp > ./o21a.tmp && chmod 666 ./o*.tmp
+
+j=$(cat "./o21a.tmp")
+
+select janus in "Status" "Close" "Exit"; do
+	case "$janus" in
+		"Status")
+			echo "
+			
+*	Port 21 is $j.		*
+
+"
+			rm ./o*.tmp
+			exit
+			;;
+		"Close")
+			if [ "$j" == "closed" ]
+			then
+				echo "
+
+*	Port 21 is $j.		*
+
+"
+				rm ./o*.tmp
+				exit
+			else
+				echo "
+
+*	Closing Port 21(ftp-control).		*
+
+"
+				fuser -k -n tcp 21
+				rm ./o*.tmp
+				exit
+			fi
+			;;
+		"Exit")
+			echo "
+
+*	bye, have a nice day!		*
+
+"
+			rm ./o*.tmp
+			exit
+			;;
+		*)
+			echo "
+
+X	INVALID!	X
+"
+			;;
+	esac
+done
+
+

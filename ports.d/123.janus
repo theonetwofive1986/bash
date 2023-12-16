@@ -1,0 +1,59 @@
+#!/usr/bin/bash
+
+set -e
+
+remove(){
+	rm ./o*.tmp
+}
+
+PS3="
+*************************************************
+*		Port 123 is ntp			*
+*						*
+*		What do you want to do?		*
+*************************************************
+"
+
+n(){
+	nmap -sU -p U:123 localhost > ./o123.tmp && chmod 666 ./o*.tmp && awk '$3 == "ntp" { print $2 }' ./o123.tmp > ./o123a.tmp && chmod 666 ./o*.tmp
+}
+
+n
+
+j=$(cat "./o123a.tmp")
+
+select janus in "Status" "Close" "Exit"; do
+	case $janus in
+		"Status")
+			echo "
+*	Port 123 is $j.		*"
+			remove
+			n
+			;;
+		"Close")
+			if [ "$j" == "closed" ]
+			then
+				echo "
+*	Port 123 is $j.		*
+"
+				remove
+				exit
+			else
+				echo "
+*	Closing port 123(ntp).	*
+"
+				fuser -k -n udp 123
+			fi
+			remove
+			exit
+			;;
+		"Exit")
+			echo "
+*	bye!		*
+"
+			remove
+			exit
+			;;
+	esac
+done
+

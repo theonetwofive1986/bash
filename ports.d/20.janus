@@ -1,0 +1,37 @@
+#!/usr/bin/bash
+
+PS3="What do you want to do to Port 20(ftp-data)?
+"
+nmap -p20 localhost > ./o20.tmp && chmod 666 o*.tmp && awk '/ftp-data/ { print $2 }' ./o20.tmp > o20a.tmp && chmod 666 o*.tmp
+
+j=$(cat "./o20a.tmp")
+
+select janus in "Status" "Close" "Exit"; do
+	case $janus in
+		"Status")
+			echo "Port 20 is $j."
+			rm ./o*.tmp
+			exit
+			;;
+		"Close")
+			if [ "$j" == "closed" ]
+			then
+				echo "Port 20 is already closed."
+				rm ./o*.tmp
+				exit
+			else
+				echo "Closing Port 20(ftp-data)."
+				fuser -k -n tcp 20
+				rm ./o*.tmp
+				exit
+			fi
+			;;
+		"Exit")
+			echo "bye"
+			rm ./o*.tmp
+			exit
+			;;
+	esac
+done
+
+

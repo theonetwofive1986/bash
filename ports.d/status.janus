@@ -1,0 +1,18 @@
+#!/usr/bin/bash
+
+set -e
+
+PS3="You can check the status of localhost's ports here.
+"
+
+select janus in "Scan" "Exit"; do
+       case $janus in
+	       "Scan")
+			nmap --top-ports 25 localhost
+			;;
+		"Exit")
+			echo "bye"
+			exit
+			;;
+	esac
+done	

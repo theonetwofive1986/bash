@@ -1,0 +1,72 @@
+#!/usr/bin/bash
+
+set -e
+
+remove(){
+	rm ./o*.tmp
+}
+
+PS3="
+*************************************************
+*		Port 443 https			*
+*						*
+*		What do you want to do?		*
+*************************************************
+
+"
+
+n1(){
+	nmap -sU -p U:443 localhost > ./o443.tmp && awk '$3 == "https" { print $2}' ./o443.tmp > ./o443a.tmp
+}
+
+n1
+
+n2(){
+	nmap -p T:443 localhost > ./o443b.tmp && chmod 666 ./o*.tmp && awk '$3 == "https" { print $2 }' ./o443b.tmp > ./o443c.tmp && chmod 666 ./o*.tmp
+}
+
+n2
+
+j=$(cat "./o443a.tmp")
+
+m=$(cat "./o443c.tmp")
+
+select janus in "Status" "Close" "Exit"; do
+PS3="
+Press \"enter\" to see the choices.
+
+"
+	case $janus in
+		"Status")
+			echo "
+*	Port udp 443 is $j and tcp 443 is $m.		*"
+			n1
+			n2
+			;;
+		"Close")
+			if [ "$j" == "closed" ]
+			then
+				echo "
+*	Port 443 is $j.		*
+"
+				remove
+				exit
+			else
+				echo "
+*	Closing port 443(dns).	*
+"
+				fuser -k -n udp 443
+			fi
+			remove
+			exit
+			;;
+		"Exit")
+			echo "
+*	bye!		*
+"
+			remove
+			exit
+			;;
+	esac
+done
+

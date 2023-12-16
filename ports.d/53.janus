@@ -1,0 +1,72 @@
+#!/usr/bin/bash
+
+set -e
+
+remove(){
+	rm ./o*.tmp
+}
+
+PS3="
+*************************************************
+*		Port 53 DNS			*
+*						*
+*		What do you want to do?		*
+*************************************************
+
+"
+
+n1(){
+	nmap -sU -p U:53 localhost > ./o53.tmp && awk '$3 == "domain" { print $2}' ./o53.tmp > ./o53a.tmp
+}
+
+n1
+
+n2(){
+	nmap -p T:53 localhost > ./o53b.tmp && chmod 666 ./o*.tmp && awk '$3 == "domain" { print $2 }' ./o53b.tmp > ./o53c.tmp && chmod 666 ./o*.tmp
+}
+
+n2
+
+j=$(cat "./o53a.tmp")
+
+m=$(cat "./o53c.tmp")
+
+select janus in "Status" "Close" "Exit"; do
+PS3="
+Press \"enter\" to see the choices.
+
+"
+	case $janus in
+		"Status")
+			echo "
+*	Port udp 53 is $j and tcp 53 is $m.		*"
+			n1
+			n2
+			;;
+		"Close")
+			if [ "$j" == "closed" ]
+			then
+				echo "
+*	Port 53 is $j.		*
+"
+				remove
+				exit
+			else
+				echo "
+*	Closing port 53(dns).	*
+"
+				fuser -k -n udp 53
+			fi
+			remove
+			exit
+			;;
+		"Exit")
+			echo "
+*	bye!		*
+"
+			remove
+			exit
+			;;
+	esac
+done
+

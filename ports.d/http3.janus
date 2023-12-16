@@ -1,0 +1,55 @@
+#!/usr/bin/bash
+
+set -e
+
+remove(){
+	rm ./o*.tmp
+}
+
+PS3="
+*************************************************
+*		Port 80 is http3			*
+*						*
+*		What do you want to do?		*
+*************************************************
+"
+
+nmap -p80 localhost > ./o80.tmp && chmod 666 ./o*.tmp && awk '$3 == "http3" { print $2 }' ./o80.tmp > ./o80a.tmp && chmod 666 ./o*.tmp
+
+j=$(cat "./o80a.tmp")
+
+select janus in "Status" "Close" "Exit"; do
+	case $janus in
+		"Status")
+			echo "
+*	Port 80 is $j.		*"
+			remove
+			exit
+			;;
+		"Close")
+			if [ "$j" == "closed" ]
+			then
+				echo "
+*	Port 80 is $j.		*
+"
+				remove
+				exit
+			else
+				echo "
+*	Closing port 80(http3).	*
+"
+				fuser -k -n udp 80
+			fi
+			remove
+			exit
+			;;
+		"Exit")
+			echo "
+*	bye!		*
+"
+			remove
+			exit
+			;;
+	esac
+done
+

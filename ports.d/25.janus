@@ -1,0 +1,58 @@
+#!/usr/bin/bash
+
+set -e
+
+remove(){
+	rm ./o*.tmp
+}
+
+PS3="
+*************************************************
+*		Port 25 SMTP			*
+*						*
+*		What do you want to do?		*
+*************************************************
+
+"
+
+nmap -p25 localhost > ./o25.tmp && chmod 666 o*.tmp && awk '/smtp/ { print $2 }' ./o25.tmp > ./o25a.tmp && chmod 666 o*.tmp
+
+j=$(cat "./o25a.tmp")
+
+select janus in "Status" "Close" "Exit"; do
+	case $janus in
+		"Status")
+			echo "
+*	Port 25 is $j.		*
+"
+			remove
+			exit
+			;;
+		"Close")
+			if [ "$j" == "closed" ]
+			then
+				echo "
+*	Port 25 is $j.		*
+"
+				remove
+				exit
+			else
+				echo "
+*	Closing Port 25(SMTP)	*
+"
+				fuser -k -n tcp 25
+			fi
+			remove
+			exit
+			;;
+		"Exit")
+			echo "
+*	bye!		*
+"
+			remove
+			exit
+			;;
+	esac
+done
+
+

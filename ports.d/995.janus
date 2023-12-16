@@ -1,0 +1,72 @@
+#!/usr/bin/bash
+
+set -e
+
+remove(){
+	rm ./o*.tmp
+}
+
+PS3="
+*************************************************
+*		Port 995 pop3s			*
+*						*
+*		What do you want to do?		*
+*************************************************
+
+"
+
+n1(){
+	nmap -sU -p U:995 localhost > ./o995.tmp && awk '$3 == "pop3s" { print $2}' ./o995.tmp > ./o995a.tmp
+}
+
+n1
+
+n2(){
+	nmap -p T:995 localhost > ./o995b.tmp && chmod 666 ./o*.tmp && awk '$3 == "pop3s" { print $2 }' ./o995b.tmp > ./o995c.tmp && chmod 666 ./o*.tmp
+}
+
+n2
+
+j=$(cat "./o995a.tmp")
+
+m=$(cat "./o995c.tmp")
+
+select janus in "Status" "Close" "Exit"; do
+PS3="
+Press \"enter\" to see the choices.
+
+"
+	case $janus in
+		"Status")
+			echo "
+*	Port udp 995 is $j and tcp 995 is $m.		*"
+			n1
+			n2
+			;;
+		"Close")
+			if [ "$j" == "closed" ]
+			then
+				echo "
+*	Port 995 is $j.		*
+"
+				remove
+				exit
+			else
+				echo "
+*	Closing port 995(dns).	*
+"
+				fuser -k -n udp 995
+			fi
+			remove
+			exit
+			;;
+		"Exit")
+			echo "
+*	bye!		*
+"
+			remove
+			exit
+			;;
+	esac
+done
+

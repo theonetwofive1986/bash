@@ -1,0 +1,59 @@
+#!/usr/bin/bash
+
+set -e
+
+remove(){
+	rm ./o*.tmp
+}
+
+PS3="
+*************************************************
+*		Port 389 is ldap			*
+*						*
+*		What do you want to do?		*
+*************************************************
+"
+
+n(){
+	nmap -p389 localhost > ./o389.tmp && chmod 666 ./o*.tmp && awk '$3 == "ldap" { print $2 }' ./o389.tmp > ./o389a.tmp && chmod 666 ./o*.tmp
+}
+
+n
+
+j=$(cat "./o389a.tmp")
+
+select janus in "Status" "Close" "Exit"; do
+	case $janus in
+		"Status")
+			echo "
+*	Port 389 is $j.		*"
+			remove
+			n
+			;;
+		"Close")
+			if [ "$j" == "closed" ]
+			then
+				echo "
+*	Port 389 is $j.		*
+"
+				remove
+				exit
+			else
+				echo "
+*	Closing port 389(ldap).	*
+"
+				fuser -k -n tcp 389
+			fi
+			remove
+			exit
+			;;
+		"Exit")
+			echo "
+*	bye!		*
+"
+			remove
+			exit
+			;;
+	esac
+done
+
