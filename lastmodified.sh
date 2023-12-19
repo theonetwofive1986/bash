@@ -5,16 +5,21 @@
 set -e  
 
 #Create a variable that contains the output of find.
-lastmodified=lastmodified.txt
+lastmodified=./lastmodified.txt
+
+remove(){
+	rm -f ./lastmodified.txt
+}
 
 #List files and directories inside /etc modified within the last 24 hours and redirect the output to ./lastmodified.txt
 #The output is sorted by date, -k is the field then 8 is the field number 1 is the character origin.
-find /etc  -maxdepth 5 -type f,d -newermt "-24 hour"  -ls | sort -k 8.1 > ./lastmodified.txt
+find /etc -maxdepth 5 -type f,d -mtime -1 -ls | sort -k 8.1 > ./lastmodified.txt && chmod 666 ./lastmodified.txt
 
 #Display the content of lastmodified.txt
-if [-f ~/lastmodified.txt]
+if [ -f ./lastmodified.txt ] 
 then
-cat $lastmodified
+	 cat ./lastmodified.txt
+	 remove
 else
-echo "Check the script"
+	echo "Check the script"
 fi
