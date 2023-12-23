@@ -1,0 +1,48 @@
+#!/usr/bin/bash
+
+set -e
+
+remove(){
+	rm -f ./ls*.txt
+}
+
+echo "
+List of lvm, disks and partitions.
+"
+
+lsblk -l | awk '/disk/;/part/;/lvm/ { print $0 }' > ./ls.txt
+awk '/disk/;/part/ { print $1 }' ./ls.txt > ./ls1.txt
+lsblk | awk '/disk/;/part/;/lvm/ { print $0 }' 
+echo "++++++++++++++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
+cat ls1.txt | awk '{ print $1 }'
+
+echo "
+Which disk do you want to create as Physical Volume?
+
+	"
+
+read i
+
+echo "
+Are you sure do you want to create Physical Volume using $i?
+
+	"
+read y
+
+if [ $y == "y" ]
+then
+	sudo pvcreate /dev/$i
+else
+	exit
+fi
+
+if [ $? == "0" ]
+then
+	echo "Success!"
+else
+	echo "Error!"
+fi
+	
+remove
+

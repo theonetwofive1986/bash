@@ -1,0 +1,34 @@
+#!/usr/bin/bash
+
+set -e
+
+echo "
+	List of Logical Volume.
+	"
+sudo lvs
+
+echo"
+Which \"LOGICAL VOLUME\" do you want to extend?
+
+"
+read lvname
+
+echo "
+You are extending the /dev/mapper/$lvname to the maximum capacity. Please confirm. (y/n)
+
+"
+read confirm
+
+if [ $confirm == "y" ]
+then
+	echo "
+	Extending /dev/mapper/$lvname...
+	"
+	sleep 3
+	lvextend -resizefs -l +100%FREE /dev/mapper/$lvname
+	./main.sh
+else
+	./main.sh
+fi
+
+

@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+set -e
+
+awk '/LVM/ { print $0 }' ./blkid.txt > uuid.txt

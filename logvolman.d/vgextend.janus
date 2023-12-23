@@ -1,0 +1,40 @@
+#!/usr/bin/bash
+
+set -e
+
+pvs(){
+	sudo pvs
+}
+
+vgs(){
+	sudo vgs
+}
+
+echo "
+Which \"VOLUME GROUP\" do you want to extend?
+"
+read vgname
+
+echo "Which \"PHYSICAL VOLLUME\" do you want to add as expansion disk for \"$vgname\"?
+"
+read pvname
+
+echo "You are going to extend \"$vgname\" using the Physical Volume \"$pvname\".
+Is thic correct?(y/n)
+"
+read vgextend
+
+if [ $vgextend == "y" ]
+then
+	echo "
+	Extending the Volume group $vgname...
+	"
+	sleep 3
+	sudo vgextend $vgname $pvname
+	./main.sh
+else
+	./main.sh
+fi
+
+
+

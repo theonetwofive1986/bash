@@ -1,0 +1,75 @@
+#!/usr/bin/bash
+
+set -e
+
+vgs(){
+	sudo vgs
+}
+
+lvs(){
+	sudo lvs
+}
+
+echo "
+	List of Volume Group.
+"
+vgs
+
+echo "
+	List of Logical Volume.
+	"
+lvs
+
+echo "
+Which \"VOLUME GROUP\" do you want to use for the creation of Logical Volume?
+"
+read vgname
+
+echo "
+What should be the \"SIZE\" of the Logical Volume do you want to create? (e.g., 1G, 3G, and 5G)
+"
+read size
+
+echo "
+What should be the \"NAME\" of the Logical Volume?
+"
+read lvname
+
+echo "
+What \"FILESYSTEM\" do you want to apply to your Logical Volume? (ext4 or xfs)
+"
+read filesystem
+
+echo "
+Where do you want to \"MOUNT\" the Logical Volume? (e.g. /home/username/extradir)
+"
+read mountpoint
+
+echo "
+You are going to create a Logical Volume:
+	
+	LV Name:	$lvname
+	Size:		$size
+	VG Name:	$vgname
+	Filesystem:	$filesystem
+	Mountpoint:	$mountpoint
+
+are the details correct? (y/n)
+
+"
+read lvcreate
+
+if [ $lvcreate == "y" ]
+then
+echo "
+	Creating Logical Volume $lvname...
+"
+sleep 3
+	sudo lvcreate $vgname -L $size -n $lvname
+	sudo mkfs.$filesystem -q /dev/mapper/$vgname-$lvname
+	sudo mkdir -p $mountpoint
+	sudo mount /dev/mapper/$vgname-$lvname $mountpoint
+	./main.sh
+else
+	./main.sh
+fi
