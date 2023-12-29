@@ -4,7 +4,8 @@ set -e
 
 lsblk
 
-echo "Which disk do you want to get the UUID?
+echo "
+Which disk do you want to get the UUID?(for LVM)
 "
 read disk
 
