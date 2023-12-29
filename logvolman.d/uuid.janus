@@ -2,4 +2,13 @@
 
 set -e
 
-awk '/LVM/ { print $0 }' ./blkid.txt > uuid.txt
+sudo blkid > blkid.tmp
+
+awk '/LVM/ { print $0 }' ./blkid.tmp > uuid.tmp
+
+sed 's/\"//g; s/\UUID=//g' ./uuid.tmp > uuid1.tmp
+
+awk '/LVM/ { print $2 }' ./uuid1.tmp > uuid2.tmp
+
+cat ./uuid2.tmp
+
