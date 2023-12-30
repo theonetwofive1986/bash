@@ -2,14 +2,14 @@
 
 set -e
 
-lsblk
+sudo blkid | awk '/LVM/ { print $1,$3,$4 }'
 
 echo "
-Which disk do you want to get the UUID?(for LVM)
+Which disk do you want to get the UUID?(showing LVM type only)
 "
 read disk
 
-sudo blkid | grep $disk > blkid.tmp
+blkid | grep $disk > blkid.tmp
 
 awk '/LVM/ { print $0 }' ./blkid.tmp > uuid.tmp
 
