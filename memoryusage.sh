@@ -4,13 +4,11 @@
 #To display the executed command and stop when encountered an error.
 set -e
 
-#To create a variable to store the result of top command.
-top=./top.txt
-
 #This will run and capture top and sort by Memory usage from high to low then save it to ./top.txt.
 top -b -n 1 -o +%MEM > ./top.txt
 
 if [ -f ~/top.txt ]
-then
-cat $top
+then 
+cat ./top.txt
 fi
+
