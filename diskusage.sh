@@ -8,7 +8,7 @@ awk '/mmcblk0p1/ { print $5 }' ./df.tmp > df1.tmp && sed 's/\%//g' ./df1.tmp > d
 
 percent=$(cat "./df2.tmp")
 
-if [ "$percent" = 75 ]
+if [ "$percent" = 90 ]
 then
 	echo "disk full" | ssmtp yourname@domain.topdomain
 else
